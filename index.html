@@ -4,111 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
+    
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3270560106781951"
+     crossorigin="anonymous"></script>
+
+    <!-- Additional Ad Script -->
+    <script type='text/javascript' src='//pl25886276.effectiveratecpm.com/f9/78/2b/f9782bf244f9e383ff831f172381c06b.js'></script>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { display: flex; justify-content: center; align-items: center; height: 100vh; background: blue; flex-direction: column; }
-        .start-screen { display: flex; justify-content: center; align-items: center; flex-direction: column; }
-        .start-box { background: white; border: 3px solid black; padding: 20px 40px; cursor: pointer; font-size: 24px; color: orange; font-weight: bold; }
-        .game-container { display: none; flex-direction: column; align-items: center; }
-        .board { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px); gap: 5px; background: black; padding: 10px; }
-        .cell { width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; background: white; font-size: 36px; font-weight: bold; cursor: pointer; }
-        .cell.x { color: yellow; }
-        .cell.o { color: red; }
-        .message { margin-top: 20px; font-size: 24px; color: white; display: none; }
-        .play-again { margin-top: 10px; padding: 10px 20px; background: white; border: none; font-size: 18px; cursor: pointer; display: none; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(2, 100px);
+            grid-template-rows: repeat(2, 100px);
+            gap: 5px;
+            margin: 20px auto;
+            width: 210px;
+        }
+        .cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            background-color: #ddd;
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            border: 2px solid #000;
+        }
+        .cell.x {
+            color: blue;
+        }
+        .cell.o {
+            color: red;
+        }
+        .message {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        .play-again {
+            display: none;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            background-color: green;
+            color: white;
+            border: none;
+        }
     </style>
 </head>
 <body>
-    <div class="start-screen">
-        <div class="start-box" onclick="startGame()">Play</div>
-    </div>
-    <div class="game-container">
-        <div class="board" id="board"></div>
-        <div class="message" id="message"></div>
-        <button class="play-again" onclick="resetGame()">Play Again</button>
-    </div>
+    <h1>Tic Tac Toe</h1>
 
-    <script type="text/javascript">
-        atOptions = {
-            'key' : '47b6e8349ccb6f53240e56d7ec1a0008',
-            'format' : 'iframe',
-            'height' : 60,
-            'width' : 468,
-            'params' : {}
-        };
+    <!-- Google AdSense Banner Ad -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3270560106781951"
+         data-ad-slot="7158299704"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
-    <script type="text/javascript" src="//www.highperformanceformat.com/47b6e8349ccb6f53240e56d7ec1a0008/invoke.js"></script>
+
+    <!-- Extra Ad Script (Effective Rate CPM) -->
+    <script type='text/javascript' src='//pl25886276.effectiveratecpm.com/f9/78/2b/f9782bf244f9e383ff831f172381c06b.js'></script>
+
+    <div class="board" id="board"></div>
+    <div class="message" id="message"></div>
+    <button class="play-again" id="playAgain" onclick="restartGame()">Play Again</button>
 
     <script>
-        let currentPlayer = 'x';
-        let board = ['', '', '', '', '', '', '', '', ''];
+        const board = document.getElementById("board");
+        const message = document.getElementById("message");
+        const playAgainButton = document.getElementById("playAgain");
+        let currentPlayer = "x";
+        let gameBoard = ["", "", "", ""];
         let gameActive = true;
 
-        function startGame() {
-            document.querySelector('.start-screen').style.display = 'none';
-            document.querySelector('.game-container').style.display = 'flex';
-            createBoard();
-        }
-
-        function createBoard() {
-            const boardElement = document.getElementById('board');
-            boardElement.innerHTML = '';
-            board.forEach((cell, index) => {
-                const cellElement = document.createElement('div');
-                cellElement.classList.add('cell');
-                cellElement.dataset.index = index;
-                cellElement.addEventListener('click', handleMove);
-                boardElement.appendChild(cellElement);
-            });
-        }
-
-        function handleMove(event) {
-            const index = event.target.dataset.index;
-            if (board[index] === '' && gameActive) {
-                board[index] = currentPlayer;
-                event.target.classList.add(currentPlayer);
-                event.target.innerText = currentPlayer.toUpperCase();
-                checkWinner();
-                currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
-            }
-        }
-
         function checkWinner() {
-            const winningCombinations = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8],
-                [0, 3, 6], [1, 4, 7], [2, 5, 8],
-                [0, 4, 8], [2, 4, 6]
+            const winPatterns = [
+                [0, 1], [2, 3], // Rows
+                [0, 2], [1, 3], // Columns
+                [0, 3], [1, 2]  // Diagonals
             ];
-            
-            for (let combo of winningCombinations) {
-                const [a, b, c] = combo;
-                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            for (let pattern of winPatterns) {
+                let [a, b] = pattern;
+                if (gameBoard[a] && gameBoard[a] === gameBoard[b]) {
                     gameActive = false;
-                    showMessage(board[a].toUpperCase() + ' Wins');
+                    message.textContent = `${gameBoard[a].toUpperCase()} Wins!`;
+                    playAgainButton.style.display = "block";
                     return;
                 }
             }
-            
-            if (!board.includes('')) {
-                showMessage('Draw');
+            if (!gameBoard.includes("")) {
+                gameActive = false;
+                message.textContent = "It's a Draw!";
+                playAgainButton.style.display = "block";
             }
         }
 
-        function showMessage(text) {
-            document.getElementById('message').innerText = text;
-            document.getElementById('message').style.display = 'block';
-            document.querySelector('.play-again').style.display = 'block';
+        function handleClick(index) {
+            if (!gameBoard[index] && gameActive) {
+                gameBoard[index] = currentPlayer;
+                renderBoard();
+                checkWinner();
+                currentPlayer = currentPlayer === "x" ? "o" : "x";
+            }
         }
 
-        function resetGame() {
-            board = ['', '', '', '', '', '', '', '', ''];
-            gameActive = true;
-            document.getElementById('message').style.display = 'none';
-            document.querySelector('.play-again').style.display = 'none';
-            createBoard();
+        function renderBoard() {
+            board.innerHTML = "";
+            gameBoard.forEach((value, index) => {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                if (value) cell.classList.add(value);
+                cell.textContent = value.toUpperCase();
+                cell.addEventListener("click", () => handleClick(index));
+                board.appendChild(cell);
+            });
         }
+
+        function restartGame() {
+            gameBoard = ["", "", "", ""];
+            gameActive = true;
+            message.textContent = "";
+            playAgainButton.style.display = "none";
+            currentPlayer = "x";
+            renderBoard();
+        }
+
+        renderBoard();
     </script>
 </body>
 </html>
+
 
 
