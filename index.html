@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; background: blue; flex-direction: column; }
+        .start-screen { display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .start-box { background: white; border: 3px solid black; padding: 20px 40px; cursor: pointer; font-size: 24px; color: orange; font-weight: bold; }
+        .game-container { display: none; flex-direction: column; align-items: center; }
+        .board { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px); gap: 5px; background: black; padding: 10px; }
+        .cell { width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; background: white; font-size: 36px; font-weight: bold; cursor: pointer; }
+        .cell.x { color: yellow; }
+        .cell.o { color: red; }
+        .message { margin-top: 20px; font-size: 24px; color: white; display: none; }
+        .play-again { margin-top: 10px; padding: 10px 20px; background: white; border: none; font-size: 18px; cursor: pointer; display: none; }
+    </style>
+</head>
+<body>
+    <div class="start-screen">
+        <div class="start-box" onclick="startGame()">Play</div>
+    </div>
+    <div class="game-container">
+        <div class="board" id="board"></div>
+        <div class="message" id="message"></div>
+        <button class="play-again" onclick="resetGame()">Play Again</button>
+    </div>
+
+    <script>
+        let currentPlayer = 'x';
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+
+        function startGame() {
+            document.querySelector('.start-screen').style.display = 'none';
+            document.querySelector('.game-container').style.display = 'flex';
+            createBoard();
+        }
+
+        function createBoard() {
+            const boardElement = document.getElementById('board');
+            boardElement.innerHTML = '';
+            board.forEach((cell, index) => {
+                const cellElement = document.createElement('div');
+                cellElement.classList.add('cell');
+                cellElement.dataset.index = index;
+                cellElement.addEventListener('click', handleMove);
+                boardElement.appendChild(cellElement);
+            });
+        }
+
+        function handleMove(event) {
+            const index = event.target.dataset.index;
+            if (board[index] === '' && gameActive) {
+                board[index] = currentPlayer;
+                event.target.classList.add(currentPlayer);
+                event.target.innerText = currentPlayer.toUpperCase();
+                checkWinner();
+                currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
+            }
+        }
+
+        function checkWinner() {
+            const winningCombinations = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            
+            for (let combo of winningCombinations) {
+                const [a, b, c] = combo;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    gameActive = false;
+                    showMessage(board[a].toUpperCase() + ' Wins');
+                    return;
+                }
+            }
+            
+            if (!board.includes('')) {
+                showMessage('Draw');
+            }
+        }
+
+        function showMessage(text) {
+            document.getElementById('message').innerText = text;
+            document.getElementById('message').style.display = 'block';
+            document.querySelector('.play-again').style.display = 'block';
+        }
+
+        function resetGame() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            document.getElementById('message').style.display = 'none';
+            document.querySelector('.play-again').style.display = 'none';
+            createBoard();
+        }
+    </script>
+</body>
+</html>
+
